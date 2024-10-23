@@ -1,0 +1,41 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+#under damped (set wd)
+def force(t,x,v,wd):
+    output=-k*x-b*v+F0*np.cos(wd*t)
+    return output
+
+x0=1 #m
+v0=0 #m/s
+m=1 #kg
+k=100 #N/m
+x=x0
+v=v0
+w0=np.sqrt(k/m)
+b=1 #kg/s
+F0=5
+wd=w0
+
+nsteps=10000
+tstop=25#sec
+
+t,dt=np.linspace(0,tstop,nsteps,retstep=True)
+
+data=np.zeros((nsteps,2))
+
+for i, time in enumerate(t):
+    a=force(time,x,v,wd)/m
+    v=v+a*dt
+    x=x+v*dt
+    if(i==0): 
+        v=v0
+        x=x0
+    data[i]=t[i],x
+
+plt.plot(data[:,0],data[:,1])
+plt.xlabel("Time (sec)")
+plt.ylabel("Position (m)")
+plt.title("Driven Force Simulation")
+plt.savefig("Driven Force Simulation.png")
+plt.close()
