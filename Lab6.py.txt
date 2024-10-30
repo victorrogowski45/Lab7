@@ -1,0 +1,124 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+
+#under damped (set wd)
+def force(t,x,v,wd):
+    output=-k*x-b*v+F0*np.cos(wd*t)
+    return output
+
+x0=1 #m
+v0=0 #m/s
+m=1 #kg
+k=100 #N/m
+x=x0
+v=v0
+w0=np.sqrt(k/m)
+b=1 #kg/s
+F0=5
+wd=w0
+
+nsteps=10000
+tstop=25#sec
+
+t,dt=np.linspace(0,tstop,nsteps,retstep=True)
+
+data=np.zeros((nsteps,2))
+
+for i, time in enumerate(t):
+    a=force(time,x,v,wd)/m
+    v=v+a*dt
+    x=x+v*dt
+    if(i==0): 
+        v=v0
+        x=x0
+    data[i]=t[i],x
+
+plt.plot(data[:,0],data[:,1])
+plt.xlabel("Time (sec)")
+plt.ylabel("Position (m)")
+plt.title("Driven Force Simulation")
+plt.save("Driven Force Simulation.png")
+plt.close()
+
+#under damped (wd sweep)
+def force(t,x,v,wd):
+    output=-k*x-b*v+F0*np.cos(wd*t)
+    return output
+
+x0=1 #m
+v0=0 #m/s
+m=0.1 #kg
+k=10 #N/m
+x=x0
+v=v0
+w0=np.sqrt(k/m)
+b=0.1 #kg/s
+F0=1
+wrange=1
+wd=np.linspace(w0-wrange,w0+wrange,nsteps)
+
+nsteps=10000
+tstop=500#sec
+
+t,dt=np.linspace(0,tstop,nsteps,retstep=True)
+
+data=np.zeros((nsteps,2))
+
+for i, time in enumerate(t):
+    a=force(time,x,v,wd[i])/m
+    v=v+a*dt
+    x=x+v*dt
+    if(i==0): 
+        v=v0
+        x=x0
+    data[i]=t[i],x
+
+plt.plot(data[:,0],data[:,1])
+plt.xlabel("Time (sec)")
+plt.ylabel("Position (m)")
+plt.title("Sweeping Wd Simulation")
+plt.save("Sweeping Wd Simulation.png")
+plt.close()
+
+#varying F0
+def force(t,x,v,F0):
+    if (x>0):
+        F0=-Fconst
+    if (x<0):
+        F0=Fconst
+    if (x==0):
+        F0=0
+    return F0
+
+x0=1 #m
+v0=0 #m/s
+m=1 #kg
+x=x0
+v=v0
+w0=np.sqrt(k/m)
+Fconst=1
+
+nsteps=10000
+tstop=25#sec
+
+t,dt=np.linspace(0,tstop,nsteps,retstep=True)
+
+data=np.zeros((nsteps,2))
+
+for i, time in enumerate(t):
+    a=force(time,x,v,F0)/m
+    v=v+a*dt
+    x=x+v*dt
+    if(i==0): 
+        v=v0
+        x=x0
+    data[i]=t[i],x
+
+plt.plot(data[:,0],data[:,1])
+#plt.plot(t,np.cos(1.1*t))
+plt.xlabel("Time (sec)")
+plt.ylabel("Position (m)")
+plt.title("F0 Simulation")
+plt.save("F0 Simulation.png")
+plt.close()
